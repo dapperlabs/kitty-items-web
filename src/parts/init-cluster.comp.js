@@ -1,4 +1,5 @@
-import {useInitialized, IDLE, PROCESSING} from "../hooks/use-initialized.hook"
+import {useInitialized} from "../hooks/use-initialized.hook"
+import {IDLE, PROCESSING} from "../global/constants"
 import {Button, Bar, Label} from "../display/bar.comp"
 import {Loading} from "../parts/loading.comp"
 

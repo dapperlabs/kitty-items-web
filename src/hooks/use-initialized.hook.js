@@ -1,38 +1,30 @@
-import {useEffect, useState} from "react"
+import {useEffect} from "react"
 import {atom, useRecoilState} from "recoil"
 import * as fcl from "@onflow/fcl"
+import {IDLE, PROCESSING, SUCCESS, ERROR, IDLE_DELAY} from "../global/constants"
 import {useConfig} from "./use-config.hook"
 import {isAccountInitialized} from "../flow/is-account-initialized.script"
 import {initializeAccount} from "../flow/initialize-account.tx"
+import {memo} from "../util/memo"
+import {sleep} from "../util/sleep"
 
-const IDLE_DELAY = 2500
-
-export const IDLE = "IDLE"
-export const PROCESSING = "PROCESSING"
-export const SUCCESS = "SUCCESS"
-export const ERROR = "ERROR"
-
-const memo = {}
-
-export const key = address => {
-  if (address == null) return "INITIALIZED[UNDEFINED]"
-  return `INITIALIZED[${address}]`
-}
-
-export const initialized = address => {
-  if (memo[address]) return memo[address]
-
-  memo[address] = atom({
-    key: key(address),
+export const initializedAtom = memo(address =>
+  atom({
+    key: "initialized::" + address + "::state",
     default: null,
   })
+)
 
-  return memo[address]
-}
+export const statusAtom = memo(address =>
+  atom({
+    key: "initialized::" + address + "::status",
+    default: IDLE,
+  })
+)
 
 export function useInitialized(address) {
-  const [init, setInit] = useRecoilState(initialized(address))
-  const [status, setStatus] = useState(IDLE)
+  const [init, setInit] = useRecoilState(initializedAtom(address))
+  const [status, setStatus] = useRecoilState(statusAtom(address))
   const env = useConfig("env")
 
   const tools = {
@@ -47,7 +39,7 @@ export function useInitialized(address) {
           `%cTX[${txId}]: ${fvsTx(env, txId)}`,
           "color:purple;font-weight:bold;font-family:monospace;"
         )
-        var txStatus = await fcl.tx(txId).onceExecuted()
+        var txStatus = await fcl.tx(txId).onceSealed()
         await tools.recheck()
         console.info(
           `%cTX[${txId}]: ${fvsTx(env, txId)}`,
@@ -59,7 +51,7 @@ export function useInitialized(address) {
         console.error(`TX[${txId}]: ${fvsTx(env, txId)}`, error)
         setStatus(ERROR)
       } finally {
-        await new Promise(r => setTimeout(r, IDLE_DELAY))
+        await sleep(IDLE_DELAY)
         setStatus(IDLE)
       }
     },

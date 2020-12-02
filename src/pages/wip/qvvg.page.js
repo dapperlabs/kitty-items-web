@@ -11,6 +11,8 @@ export function Page() {
       <Stack>
         <AuthCluster />
         <InitCluster address={user.addr} />
+        <InitCluster address={user.addr} />
+        <InitCluster address={user.addr} />
       </Stack>
     </Base>
   )

@@ -12,4 +12,4 @@ Self contained Semi-Complex Components.
 
 ## What shouldn't go in here:
 
-- Dsiplay Components
+- Display Components
