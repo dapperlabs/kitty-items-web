@@ -1793,7 +1793,7 @@
   resolved "https://registry.yarnpkg.com/@onflow/util-address/-/util-address-0.0.0.tgz#f14696cdd8fb7808f1da59f1fde116621e901ebf"
   integrity sha512-Lzbw/wV3O1fmfXYF2q6iGLgHz/7ATsLXOHceP5tzeEAKNf+srdtTNJv5jhNGhpFFAtQ6TcomXURVMhUg+/4YbA==
 
-"@onflow/util-invariant@0.0.0":
+"@onflow/util-invariant@0.0.0", "@onflow/util-invariant@^0.0.0":
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@onflow/util-invariant/-/util-invariant-0.0.0.tgz#4bb62f7022b211a0538d4b854105fcbdc3782a11"
   integrity sha512-ZCt+NqLdeHt9tZhb0DGxo6iSIS9oNUpLkd0PEMzUYUHr4UwrUO7VruV1AUW3PaF9V78DZ13fNZUiQEzdF76O/w==

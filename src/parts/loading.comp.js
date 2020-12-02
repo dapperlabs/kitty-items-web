@@ -1,4 +1,17 @@
 import {useState, useEffect} from "react"
+import styled from "styled-components"
+
+const Root = styled.pre`
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  display: inline-block;
+  align-self: center;
+  font-size: inherit;
+  font-family: var(--font-family);
+  display: flex;
+  font-weight: bold;
+`
 
 const defaultRoll = [
   "[*     ]",
@@ -14,7 +27,7 @@ const defaultRoll = [
   "[*     ]",
 ]
 
-export const Loading = ({seq = defaultRoll, label}) => {
+export const Loading = ({seq = defaultRoll, label, tick}) => {
   const [i, set] = useState(0)
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,13 +35,13 @@ export const Loading = ({seq = defaultRoll, label}) => {
         var next = state + 1
         return next >= seq.length ? 0 : next
       })
-    }, seq.length * 15)
+    }, tick || seq.length * 15)
     return () => clearInterval(interval)
   })
   return (
-    <pre>
+    <Root>
       {seq[i]}
       {label && " " + label}
-    </pre>
+    </Root>
   )
 }
