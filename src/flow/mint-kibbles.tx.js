@@ -8,19 +8,18 @@ const CODE = cdc`
   import FungibleToken from 0xFungibleToken
 
   transaction {
-    prepare(acct: AuthAccount) {
-      if (!DietKibbles.hasDietKibbles(acct.address)) {
-        let vault <- DietKibbles.createEmptyVault()
-        acct.save(<- vault, to: DietKibbles.privatePath)
-        acct.link<&{FungibleToken.Receiver, FungibleToken.Balance}>(DietKibbles.publicPath, target: DietKibbles.privatePath)
-      }
+    prepare(to: AuthAccount) {
+      getAccount(to.address)
+        .getCapability<&{FungibleToken.Receiver}>(DietKibbles.publicPath)!
+        .borrow()!
+        .deposit(from: <- DietKibbles.mintTenDietKibbles())
     }
   }
 `
 
-export async function initializeAccount(address, opts = {}) {
+export async function mintKibbles(address, opts = {}) {
   // prettier-ignore
-  invariant(address != null, "Tried to initialize an account but no address was supplied")
+  invariant(address != null, "Need an account to send the minted kibbles to...")
 
   return tx(
     [
