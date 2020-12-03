@@ -1,3 +1,4 @@
+import {Suspense} from "react"
 import {useInitialized} from "../hooks/use-initialized.hook"
 import {IDLE, PROCESSING} from "../global/constants"
 import {Button, Bar, Label} from "../display/bar.comp"
@@ -8,25 +9,14 @@ export function InitCluster({address}) {
 
   if (address == null) return null
 
-  if (isInit == null)
-    return (
-      <Bar>
-        <Label>Initialized?:</Label>
-        <Loading label="Checking" />
-      </Bar>
-    )
-
-  if (isInit)
-    return (
-      <Bar>
-        <Label>Initialized?:</Label>
-        <Label strong good>
-          Account Ready
-        </Label>
-      </Bar>
-    )
-
-  return (
+  return isInit ? (
+    <Bar>
+      <Label>Initialized?:</Label>
+      <Label strong good>
+        Account Ready
+      </Label>
+    </Bar>
+  ) : (
     <Bar>
       <Label>Initialized?:</Label>
       <Label strong bad>
@@ -38,13 +28,13 @@ export function InitCluster({address}) {
         ) : (
           <Loading
             tick={500}
-            seq={["•*• •*• •*• •*• •*•", "*•* *•* *•* *•* *•*"]}
+            seq={["•*• *•* •*• *•* •*•", "*•* •*• *•* •*• *•*"]}
           />
         )}
       </Button>
       {status === IDLE ? (
         <Label muted small>
-          (Transaction Requires 0.001 FLOW)
+          (Transaction Requires 0.0001 FLOW)
         </Label>
       ) : (
         <Label strong good={status === "SUCCESS"} bad={status === "ERROR"}>
@@ -52,5 +42,19 @@ export function InitCluster({address}) {
         </Label>
       )}
     </Bar>
+  )
+}
+
+export default function WrappedInitCluster({address}) {
+  return (
+    <Suspense
+      fallback={
+        <Bar>
+          <Loading label="Checking if Account is Initialized..." />
+        </Bar>
+      }
+    >
+      <InitCluster address={address} />
+    </Suspense>
   )
 }
