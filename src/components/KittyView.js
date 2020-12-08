@@ -15,14 +15,15 @@ class KittyView extends React.Component {
     
 
     render() {
-      let items = this.props.items
+      let items = this.props.items ? this.props.items : []
+      let kitty = this.props.kitty ? this.props.kitty.image : ""
       return (
 
           <div className="kittyContainer">
             {items.map(function(item, i){
               return <img src={item} className="item" key={i}/>
             })}
-            <img className="kitty" src={this.state.kitty}/>
+            <img className="kitty" src={kitty}/>
           </div>     
      );
     }
