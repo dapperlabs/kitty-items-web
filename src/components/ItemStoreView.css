@@ -1,0 +1,58 @@
+html, body, #app, #app>div, .base {
+  height: 100%;
+}
+
+body > #root > div {
+  height: 100vh;
+}
+
+.itemStoreWindow {
+  width: 813px;
+  height: 522px;
+
+  background: #FFEBEB 0% 0% no-repeat padding-box;
+  border-radius: 8px;
+  opacity: 1;
+
+  padding: 20px;
+}
+
+#store-row-view {
+  height: 100%;
+}
+
+#kitty-items-right-col {
+
+   padding-left: 25px;
+
+   padding-right: 0px;
+  overflow-x: hidden;
+   overflow-y: scroll;
+}
+
+.kittyWindow {
+
+  max-width: 338px;
+  min-height: 100% !important;
+
+  /* padding-top: 20px; */
+
+  background: #707070 0% 0% no-repeat padding-box;
+  border: 1px solid #707070;
+  border-radius: 8px;
+  opacity: 1;
+
+  /* display: inline; */
+}
+
+.storeWindowContainer {
+  height: 100%;
+}
+
+#store-header {
+  height: 50px;
+}
+
+#kitty-items-view {
+  max-height: 100%;
+}
