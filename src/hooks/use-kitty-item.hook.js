@@ -1,22 +1,17 @@
 import {useEffect} from "react"
-import {atom, useRecoilState} from "recoil"
-import * as fcl from "@onflow/fcl"
-import { ToastBody } from "react-bootstrap"
+import {atomFamily, useRecoilState} from "recoil"
 
-export const item = atom({
+export const itemAtom = atomFamily({
   key: "ITEM",
-  default: {image: null, highlighted: null, type: null},
+  default: { image: null },
 })
 
-const tools = {
-  logIn: fcl.logIn,
-  logOut: fcl.unauthenticate,
-  signUp: fcl.signUp,
-  changeUser: fcl.reauthenticate,
+const getKittyItem = (address, ACCOUNT, itemId) => {
+  return { image: "/items/hat01.svg" }
 }
-// in-progress
-export function useKittyItem() {
-  const [item, setItem] = useRecoilState(item)
-  useEffect(() => todo(), [item])
+
+export function useKittyItem(address, ACCOUNT, itemId) {
+  const [item, setItem] = useRecoilState(itemAtom(itemId))
+  useEffect(() => setItem(getKittyItem(address, ACCOUNT, itemId)), [setItem])
   return [item]
 }

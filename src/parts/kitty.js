@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from "styled-components"
+import { useKitty } from "../hooks/use-kitty.hook"
 
 const Container = styled.div`
   position: relative;
@@ -19,22 +20,15 @@ const Image = styled.img`
   width: 100%;
   z-index: 0;
 `
-class Kitty extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-
-    render() {
-      let items = this.props.items ? this.props.items : []
-      let kitty = this.props.kitty ? this.props.kitty.image : null
-      return (
-          <Container>
-            {items.map(function(item, i){
-              return <Item src={item} key={i}/>
-            })}
-            <Image src={kitty}/>
-          </Container>     
-     );
-    }
+export function Kitty({address, ACCOUNT, kittyId}) {
+  const [kitty, setKitty] = useKitty(address, ACCOUNT, kittyId)
+  return (
+      <Container>
+        {kitty.items.map(function(item, i){
+          return <Item src={item.image} key={i}/>
+        })}
+        <Image src={kitty.image}/>
+      </Container>     
+  );
 }
 export default Kitty;

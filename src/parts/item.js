@@ -1,5 +1,8 @@
-import React from 'react';
+
 import styled from "styled-components"
+import { useKittyItem } from "../hooks/use-kitty-item.hook"
+import { useKitty } from "../hooks/use-kitty.hook"
+import React, { useState } from 'react';
 
 const Image = styled.img`
   position: relative;
@@ -31,29 +34,24 @@ const Indicator = styled.div`
   margin-top: 7px;
   margin-right: 7px;
 `
+export function Item({address, ACCOUNT, itemId, kittyId}) {
+  const [kitty, setKitty] = useKitty(address, ACCOUNT, kittyId)
+  const [item] = useKittyItem(address, ACCOUNT, itemId)
+  const [selected, setSelected] = useState(false);
 
-class Item extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {highlighted: false, item: props.item}
-      this.onClick = this.onClick.bind(this)
-    }
+  const onClick = () => {
+    setSelected(!selected)
+    kitty.items.push(itemId)
+    // setKitty(kitty)
+  }
 
-    onClick() {
-      this.props.addOrRemoveItem(this.state.item)
-      this.setState({highlighted: !this.state.highlighted})
-    }
-
-    render() {
-      const Window = this.state.highlighted ? Selected : Deselected
-      return (
-          <Window onClick={this.onClick}>
-            {this.state.highlighted ? <Indicator/> : null}
-            <Container>
-              <Image src={this.state.item}/>
-            </Container>
-          </Window>
-     );
-    }
+  const Window = selected ? Selected : Deselected
+  return (
+      <Window onClick={onClick}>
+        {selected ? <Indicator/> : null}
+        <Container>
+          <Image src={item.image}/>
+        </Container>
+      </Window>
+  )
 }
-export default Item;

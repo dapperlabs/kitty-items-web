@@ -1,5 +1,5 @@
 import React from 'react';
-import Item from './item'
+import { Item } from './item'
 import { Card, Container, Row, Col, Button  } from 'react-bootstrap'
 import Kitty from './kitty';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -53,7 +53,7 @@ class ItemStore extends React.Component {
           <StoreContainer fluid>
             <Row className="h-100">
               <Window>
-                <Kitty kitty={kitty} items={this.state.items}/>
+                <Kitty kittyId={14}/>
               </Window>
               <Col>
                 <Header>
@@ -69,12 +69,13 @@ class ItemStore extends React.Component {
                 <Row>
                   <Items>
                     <Row>
-                      <Item addOrRemoveItem={this.addOrRemoveItem} item="/items/hat01.svg"/>
-                      <Item addOrRemoveItem={this.addOrRemoveItem}  item="/items/hat02.svg"/>
-                      <Item addOrRemoveItem={this.addOrRemoveItem}  item="/items/hat03.svg"/>
-                      <Item addOrRemoveItem={this.addOrRemoveItem}  item="/items/hat04.svg"/>
-                      <Item addOrRemoveItem={this.addOrRemoveItem}  item="/items/sunglasses01.svg"/>
-                      <Item addOrRemoveItem={this.addOrRemoveItem}  item="/items/sunglasses02.svg"/>
+                      <Item kittyId={14} itemId={15} />
+                      <Item itemId={16} />
+                      <Item itemId={17} />
+                      <Item itemId={18} />
+                      <Item itemId={19} />
+                      <Item itemId={20} />
+                      <Item itemId={21} />
                     </Row>
                   </Items>
                 </Row>
