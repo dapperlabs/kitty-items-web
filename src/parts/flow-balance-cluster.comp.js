@@ -6,22 +6,19 @@ import {Loading} from "../parts/loading.comp"
 import {fmtFlow} from "../util/fmt-flow"
 
 export function FlowBalanceCluster({address}) {
-  const [balance, status, tools] = useFlowBalance(address)
+  const flow = useFlowBalance(address)
   if (address == null) return null
 
   return (
     <Bar>
       <Label>Flow Balance:</Label>
-      <Label strong good={balance > 0} bad={balance <= 0}>
-        {fmtFlow(balance)}
+      <Label strong good={flow.balance > 0} bad={flow.balance <= 0}>
+        {fmtFlow(flow.balance)}
       </Label>
-      <Button disabled={status !== IDLE} onClick={tools.refresh}>
-        {status === PROCESSING ? (
-          <Loading seq={["•*• *•*", "*•* •*•"]} tick={500} />
-        ) : (
-          "Refresh"
-        )}
+      <Button disabled={flow.status !== IDLE} onClick={flow.refresh}>
+        Refresh
       </Button>
+      {flow.status !== IDLE && <Loading label={flow.status} />}
     </Bar>
   )
 }

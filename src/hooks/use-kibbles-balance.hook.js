@@ -19,32 +19,38 @@ export const statusAtom = atomFamily({
 })
 
 export function useKibblesBalance(address) {
-  const [_balance, _status, flowTools] = useFlowBalance(address)
+  const flow = useFlowBalance(address)
   const [balance, setBalance] = useRecoilState(valueAtom(address))
   const [status, setStatus] = useRecoilState(statusAtom(address))
 
-  const tools = {
-    refresh: async () => {
-      setStatus(PROCESSING)
-      await fetchKibblesBalance(address).then(setBalance)
-      setStatus(IDLE)
-    },
-    mint: async () => {
+  async function refresh() {
+    setStatus(PROCESSING)
+    await fetchKibblesBalance(address).then(setBalance)
+    setStatus(IDLE)
+  }
+
+  return {
+    balance,
+    status,
+    refresh,
+    /* async mint() {
       mintKibbles(address, {
-        onStart: () => setStatus(PROCESSING),
-        onSuccess: async () => {
-          await fetchKibblesBalance(address).then(setBalance)
-          flowTools.refresh()
+        onStart() {
+          setStatus(PROCESSING)
+        },
+        onSuccess() {
+          fetchKibblesBalance(address).then(setBalance)
+          flow.refresh()
           setStatus(SUCCESS)
         },
-        onError: () => setStatus(ERROR),
-        onComplete: async () => {
+        onError() {
+          setStatus(ERROR)
+        },
+        async onComplete() {
           await sleep(IDLE_DELAY)
           setStatus(IDLE)
         },
       })
-    },
+    }, */
   }
-
-  return [balance, status, tools]
 }

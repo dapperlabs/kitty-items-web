@@ -4,44 +4,31 @@ import {IDLE, PROCESSING} from "../global/constants"
 import {Button, Bar, Label} from "../display/bar.comp"
 import {Loading} from "../parts/loading.comp"
 
-export function InitCluster({address}) {
-  const [isInit, status, tools] = useInitialized(address)
+const fmtBool = bool => (bool ? "Yes" : "No")
 
+export function InitCluster({address}) {
+  const init = useInitialized(address)
   if (address == null) return null
 
-  return isInit ? (
-    <Bar>
-      <Label>Initialized?:</Label>
-      <Label strong good>
-        Account Ready
-      </Label>
-    </Bar>
-  ) : (
-    <Bar>
-      <Label>Initialized?:</Label>
-      <Label strong bad>
-        Not Initialized
-      </Label>
-      <Button disabled={status !== IDLE} onClick={tools.init}>
-        {status !== PROCESSING ? (
-          "Initialize Account!"
-        ) : (
-          <Loading
-            tick={500}
-            seq={["•*• *•* •*• *•* •*•", "*•* •*• *•* •*• *•*"]}
-          />
-        )}
-      </Button>
-      {status === IDLE ? (
-        <Label muted small>
-          (Transaction Requires 0.0001 FLOW)
-        </Label>
-      ) : (
-        <Label strong good={status === "SUCCESS"} bad={status === "ERROR"}>
-          {status}
-        </Label>
+  return (
+    <div>
+      <Bar>
+        <Label>Initialized</Label>
+        {init.status === IDLE || <Loading label={init.status} />}
+      </Bar>
+      <ul>
+        <li>Kibble: {fmtBool(init.Kibble)}</li>
+        <li>KittyItems: {fmtBool(init.KittyItems)}</li>
+        <li>KittyItemsMarket: {fmtBool(init.KittyItemsMarket)}</li>
+      </ul>
+      {!init.isInitialized && (
+        <Bar>
+          <Button disabled={init.status !== IDLE} onClick={init.initialize}>
+            Initialize {address}
+          </Button>
+        </Bar>
       )}
-    </Bar>
+    </div>
   )
 }
 

@@ -2,10 +2,17 @@ import {send, decode, script, args, arg, cdc} from "@onflow/fcl"
 import {Address} from "@onflow/types"
 
 const CODE = cdc`
-  import DietKibbles from 0xDietKibbles
+  import FungibleToken from 0xFungibleToken
 
   pub fun main(address: Address): UFix64? {
-    return DietKibbles.fetchBalance(address)
+    let cap = getAccount(address)
+      .getCapability<&{FungibleToken.Balance}>(/public/KibbleBalance)!
+
+    if let vault = cap.borrow() {
+      return vault.balance
+    }
+
+    return nil
   }
 `
 
