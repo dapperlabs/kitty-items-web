@@ -13,7 +13,7 @@ export function InitCluster({address}) {
   return (
     <div>
       <Bar>
-        <Label>Initialized</Label>
+        <Label strong>Initialized</Label>
         {init.status === IDLE || <Loading label={init.status} />}
       </Bar>
       <ul>
