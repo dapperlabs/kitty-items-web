@@ -11,6 +11,7 @@ const Root = styled.pre`
   font-family: var(--font-family);
   display: flex;
   font-weight: bold;
+  color: currentColor;
 `
 
 const defaultRoll = [

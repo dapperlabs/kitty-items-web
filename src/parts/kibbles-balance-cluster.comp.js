@@ -7,30 +7,20 @@ import {Loading} from "../parts/loading.comp"
 import {fmtKibbles} from "../util/fmt-kibbles"
 
 export function KibblesBalanceCluster({address}) {
-  const [isInit] = useInitialized(address)
-  const [balance, status, tools] = useKibblesBalance(address)
-  if (address == null || !isInit) return null
+  const init = useInitialized(address)
+  const kibble = useKibblesBalance(address)
+  if (address == null || !init.isInitialized) return null
 
   return (
     <Bar>
       <Label>Kibbles Balance:</Label>
-      <Label strong good={balance > 0} bad={balance <= 0}>
-        {fmtKibbles(balance)}
+      <Label strong good={kibble.balance > 0} bad={kibble.balance <= 0}>
+        {fmtKibbles(kibble.balance)}
       </Label>
-      <Button disabled={status !== IDLE} onClick={tools.refresh}>
-        {status === PROCESSING ? (
-          <Loading seq={["•*• *•*", "*•* •*•"]} tick={500} />
-        ) : (
-          "Refresh"
-        )}
+      <Button disabled={kibble.status !== IDLE} onClick={kibble.refresh}>
+        Refresh
       </Button>
-      <Button disabled={status !== IDLE} onClick={tools.mint}>
-        {status === PROCESSING ? (
-          <Loading seq={["•*• *•* •*•", "*•* •*• *•*"]} tick={500} />
-        ) : (
-          "Mint Kibble"
-        )}
-      </Button>
+      {kibble.status !== IDLE && <Loading label={kibble.status} />}
     </Bar>
   )
 }

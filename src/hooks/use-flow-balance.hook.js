@@ -19,13 +19,13 @@ export function useFlowBalance(address) {
   const [balance, setBalance] = useRecoilState(valueAtom(address))
   const [status, setStatus] = useRecoilState(statusAtom(address))
 
-  const tools = {
-    refresh: async () => {
+  return {
+    balance,
+    status,
+    async refresh() {
       setStatus(PROCESSING)
       await fetchFlowBalance(address).then(setBalance)
       setStatus(IDLE)
     },
   }
-
-  return [balance, status, tools]
 }
