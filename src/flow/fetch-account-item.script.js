@@ -1,49 +1,82 @@
-import {send, decode, script, args, arg, cdc} from "@onflow/fcl"
-import {Address, UInt64} from "@onflow/types"
+import * as fcl from "@onflow/fcl"
+import * as t from "@onflow/types"
+import {batch} from "./util/batch"
 
-const CODE = cdc`
-  import NonFungibleToken from 0xNonFungibleToken
-  import KittyItems from 0xKittyItems
-  
-  pub struct Item {
-    pub let id: UInt64
-    pub let type: UInt64
+const CODE = fcl.cdc`
+import NonFungibleToken from 0xNonFungibleToken
+import KittyItems from 0xKittyItems
 
-    init(id: UInt64, type: UInt64) {
-      self.id = id
-      self.type = type
-    }
+pub struct Item {
+  pub let id: UInt64
+  pub let type: UInt64
+
+  init(id: UInt64, type: UInt64) {
+    self.id = id
+    self.type = type
   }
+}
 
-  pub fun main(address: Address, id: UInt64): Item? {
-    let cap = getAccount(address)
-      .getCapability<&{NonFungibleToken.CollectionPublic}>(/public/KittyItemsCollection)!
+pub fun fetch(address: Address, id: UInt64): Item? {
+  let cap = getAccount(address)
+    .getCapability<&{NonFungibleToken.CollectionPublic}>(/public/KittyItemsCollection)!
 
-    return Item(id: id, type: 0)
+  return Item(id: id, type: 0)
 
-    // Waiting on future contract deployment
-    // if let collection = cap.borrow() {
-    //   if let item = collection.borrowKittyItem(id: id) {
-    //     return Item(owner: collection?.owner?.address, id: id, type: item.typeID)
-    //   } else {
-    //     return nil
-    //   }
-    // } else {
-    //   return nil
-    // }
+  // Waiting on future contract deployment
+  // if let collection = cap.borrow() {
+  //   if let item = collection.borrowKittyItem(id: id) {
+  //     return Item(id: id, type: item.typeID)
+  //   } else {
+  //     return nil
+  //   }
+  // } else {
+  //   return nil
+  // }
+}
+
+pub fun main(keys: [String], addresses: [Address], ids: [UInt64]): {String: Item?} {
+  let r: {String: Item?} = {}
+  var i = 0
+  while i < keys.length {
+    let key = keys[i]
+    let address = addresses[i]
+    let id = ids[i]
+    r[key] = fetch(address: address, id: id)
+    i = i + 1
   }
+  return r
+}
 `
 
-export function fetchAccountItem(address, id) {
+const collate = px => {
+  return Object.keys(px).reduce(
+    (acc, key) => {
+      acc.keys.push(key)
+      acc.addresses.push(px[key][0])
+      acc.ids.push(px[key][1])
+      return acc
+    },
+    {keys: [], addresses: [], ids: []}
+  )
+}
+
+const {enqueue} = batch("FETCH_ACCOUNT_ITEM", async px => {
+  const {keys, addresses, ids} = collate(px)
+
+  return fcl
+    .send([
+      fcl.script(CODE),
+      fcl.args([
+        fcl.arg(keys, t.Array(t.String)),
+        fcl.arg(addresses, t.Array(t.Address)),
+        fcl.arg(ids.map(Number), t.Array(t.UInt64)),
+      ]),
+    ])
+    .then(fcl.decode)
+})
+
+export async function fetchAccountItem(address, id) {
   if (address == null) return Promise.resolve(null)
   if (id == null) return Promise.resolve(null)
-
-  // prettier-ignore
-  return send([
-    script(CODE),
-    args([
-      arg(address, Address),
-      arg(Number(id), UInt64),
-    ]),
-  ]).then(decode)
+  return enqueue(address, id)
 }
