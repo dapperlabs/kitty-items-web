@@ -5,7 +5,9 @@
   "dependencies": {
     "@onflow/fcl": "^0.0.67-alpha.43",
     "@onflow/types": "^0.0.4",
+    "@onflow/util-actor": "^0.0.2",
     "@onflow/util-invariant": "^0.0.0",
+    "@onflow/util-uid": "^0.0.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",

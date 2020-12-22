@@ -1782,7 +1782,7 @@
   resolved "https://registry.yarnpkg.com/@onflow/types/-/types-0.0.4.tgz#d4a9c3e301d23182dd256b73d3679c952fe653f0"
   integrity sha512-47r0qTM45mR7FSvyEE0njGljkpgy3MCf/2W82pfZ/PTFGWr1nsGV/4j2bUfK9Sry4Ymz2W20iRZVP3xpqOhqGw==
 
-"@onflow/util-actor@0.0.2":
+"@onflow/util-actor@0.0.2", "@onflow/util-actor@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@onflow/util-actor/-/util-actor-0.0.2.tgz#51de2742d36a409931ff88183eeadf277e26f717"
   integrity sha512-NV3zPXQue3FqVgcIIMo6ifJOiP3hVSQTaR4ZrWLFU5iAZ/L73cTtBMbCB4BUFOe20ALtF2c9PFmpNVowCYV+nw==
@@ -1804,7 +1804,7 @@
   resolved "https://registry.yarnpkg.com/@onflow/util-template/-/util-template-0.0.1.tgz#860fb884f52d078958c0cc2343cd34d6e85de49e"
   integrity sha512-qlJ0oq+QujnZRCOGYaw5OKSDpiDIOpwQMYlMe4Mbz//Wn+LOmUghoKZGmRP+YCgp7BJ4aB6AWW/7kL83NDy50A==
 
-"@onflow/util-uid@0.0.1":
+"@onflow/util-uid@0.0.1", "@onflow/util-uid@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@onflow/util-uid/-/util-uid-0.0.1.tgz#aae81c094bffffbca622854164a2cc5bca4df17a"
   integrity sha512-SzBscBdyn1Zoks0Wo/w7J/Ds9IZ/T+KM/wyWMwWla4PnxwBFviy1BytEQY+sM5q1UNOvaGWgGEoRmH/oOCcglA==
