@@ -1,6 +1,5 @@
 import {atomFamily, selectorFamily, useRecoilState} from "recoil"
 import {fetchKibblesBalance} from "../flow/fetch-kibbles-balance.script"
-import {mintKibbles} from "../flow/mint-kibbles.tx"
 import {IDLE, PROCESSING, SUCCESS, ERROR, IDLE_DELAY} from "../global/constants"
 import {sleep} from "../util/sleep"
 import {useFlowBalance} from "./use-flow-balance.hook"
@@ -33,24 +32,5 @@ export function useKibblesBalance(address) {
     balance,
     status,
     refresh,
-    /* async mint() {
-      mintKibbles(address, {
-        onStart() {
-          setStatus(PROCESSING)
-        },
-        onSuccess() {
-          fetchKibblesBalance(address).then(setBalance)
-          flow.refresh()
-          setStatus(SUCCESS)
-        },
-        onError() {
-          setStatus(ERROR)
-        },
-        async onComplete() {
-          await sleep(IDLE_DELAY)
-          setStatus(IDLE)
-        },
-      })
-    }, */
   }
 }

@@ -10,37 +10,56 @@ const CODE = cdc`
   import KittyItems from 0xKittyItems
   import KittyItemsMarket from 0xKittyItemsMarket
 
+  pub fun hasKibble(_ address: Address): Bool {
+    let receiver = getAccount(address)
+      .getCapability<&Kibble.Vault{FungibleToken.Receiver}>(Kibble.ReceiverPublicPath)!
+      .check()
+
+    let balance = getAccount(address)
+      .getCapability<&Kibble.Vault{FungibleToken.Balance}>(Kibble.BalancePublicPath)!
+      .check()
+
+    return receiver && balance
+  }
+
+  pub fun hasItems(_ address: Address): Bool {
+    return getAccount(address)
+      .getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath)!
+      .check()
+  }
+
+  pub fun hasMarket(_ address: Address): Bool {
+    return getAccount(address)
+      .getCapability<&KittyItemsMarket.Collection{KittyItemsMarket.CollectionPublic}>(KittyItemsMarket.CollectionPublicPath)!
+      .check()
+  }
+
   transaction {
     prepare(acct: AuthAccount) {
-      // Kibble
-      if acct.borrow<&Kibble.Vault>(from: /storage/KibbleVault) == nil {
-        let privatePath = /storage/KibbleVault
-        let receiverPath = /public/KibbleReceiver
-        let balancePath = /public/KibbleBalance
-
-        acct.save(<-Kibble.createEmptyVault(), to: privatePath)
-        acct.link<&Kibble.Vault{FungibleToken.Receiver}>(receiverPath, target: privatePath)
-        acct.link<&Kibble.Vault{FungibleToken.Balance}>(balancePath, target: privatePath)
+      if !hasKibble(acct.address) {
+        if acct.borrow<&Kibble.Vault>(from: /storage/KibbleVault) == nil {
+          acct.save(<-Kibble.createEmptyVault(), to: Kibble.VaultStoragePath)
+        }
+        acct.unlink(Kibble.ReceiverPublicPath)
+        acct.unlink(Kibble.BalancePublicPath)
+        acct.link<&Kibble.Vault{FungibleToken.Receiver}>(Kibble.ReceiverPublicPath, target: Kibble.VaultStoragePath)
+        acct.link<&Kibble.Vault{FungibleToken.Balance}>(Kibble.BalancePublicPath, target: Kibble.VaultStoragePath)
       }
 
-      // KittyItems
-      if acct.borrow<&KittyItems.Collection>(from: /storage/KittyItemsCollection) == nil {
-        let privatePath = /storage/KittyItemsCollection
-        let providerPath = /private/KittyItemsCollectionProvider
-        let collectionPath = /public/KittyItemsCollection
-
-        acct.save(<-KittyItems.createEmptyCollection(), to: privatePath)
-        acct.link<&KittyItems.Collection{NonFungibleToken.Provider}>(providerPath, target: privatePath)
-        acct.link<&KittyItems.Collection{NonFungibleToken.CollectionPublic}>(collectionPath, target: privatePath)
+      if !hasItems(acct.address) {
+        if acct.borrow<&KittyItems.Collection>(from: /storage/KittyItemsCollection) == nil {
+          acct.save(<-KittyItems.createEmptyCollection(), to: KittyItems.CollectionStoragePath)
+        }
+        acct.unlink(KittyItems.CollectionPublicPath)
+        acct.link<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath, target: KittyItems.CollectionStoragePath)
       }
 
-      // KittyItemsMarket
-      if acct.borrow<&KittyItemsMarket.Collection>(from: /storage/KittyItemsMarketCollection) == nil {
-        let privatePath = /storage/KittyItemsMarketCollection
-        let collectionPath = /public/KittyItemsMarketCollection
-
-        acct.save(<-KittyItemsMarket.createEmptyCollection(), to: privatePath)
-        acct.link<&KittyItemsMarket.Collection{KittyItemsMarket.CollectionPublic}>(collectionPath, target: privatePath)
+      if !hasMarket(acct.address) {
+        if acct.borrow<&KittyItemsMarket.Collection>(from: /storage/KittyItemsMarketCollection) == nil {
+          acct.save(<-KittyItemsMarket.createEmptyCollection(), to: KittyItemsMarket.CollectionStoragePath)
+        }
+        acct.unlink(KittyItemsMarket.CollectionPublicPath)
+        acct.link<&KittyItemsMarket.Collection{KittyItemsMarket.CollectionPublic}>(KittyItemsMarket.CollectionPublicPath, target:KittyItemsMarket.CollectionStoragePath)
       }
     }
   }
@@ -53,7 +72,7 @@ export async function initializeAccount(address, opts = {}) {
   return tx(
     [
       transaction(CODE),
-      limit(45),
+      limit(70),
       proposer(authz),
       payer(authz),
       authorizations([authz]),
