@@ -9,20 +9,26 @@ const CODE = cdc`
   import KittyItemsMarket from 0xKittyItemsMarket
 
   pub fun hasKibble(_ address: Address): Bool {
-    return getAccount(address)
-      .getCapability<&Kibble.Vault{FungibleToken.Balance}>(/public/KibbleBalance)!
+    let receiver: Bool = getAccount(address)
+      .getCapability<&Kibble.Vault{FungibleToken.Receiver}>(Kibble.ReceiverPublicPath)!
       .check()
+
+    let balance: Bool = getAccount(address)
+      .getCapability<&Kibble.Vault{FungibleToken.Balance}>(Kibble.BalancePublicPath)!
+      .check()
+
+    return receiver && balance
   }
 
   pub fun hasKittyItems(_ address: Address): Bool {
     return getAccount(address)
-      .getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic}>(/public/KittyItemsCollection)!
+      .getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath)!
       .check()
   }
 
   pub fun hasKittyItemsMarket(_ address: Address): Bool {
     return getAccount(address)
-      .getCapability<&KittyItemsMarket.Collection{KittyItemsMarket.CollectionPublic}>(/public/KittyItemsMarketCollection)!
+      .getCapability<&KittyItemsMarket.Collection{KittyItemsMarket.CollectionPublic}>(KittyItemsMarket.CollectionPublicPath)!
       .check()
   }
 

@@ -18,7 +18,7 @@ pub struct Item {
 
 pub fun fetch(address: Address, id: UInt64): Item? {
   let cap = getAccount(address)
-    .getCapability<&{NonFungibleToken.CollectionPublic}>(/public/KittyItemsCollection)!
+    .getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath)!
 
   return Item(id: id, type: 0)
 

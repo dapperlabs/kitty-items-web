@@ -7,7 +7,7 @@ const CODE = cdc`
 
   pub fun main(address: Address): [UInt64] {
     let cap = getAccount(address)
-      .getCapability<&{NonFungibleToken.CollectionPublic}>(/public/KittyItemsCollection)!
+      .getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath)!
 
     if let collection = cap.borrow() {
       return collection.getIDs()
