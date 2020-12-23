@@ -20,18 +20,15 @@ pub fun fetch(address: Address, id: UInt64): Item? {
   let cap = getAccount(address)
     .getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath)!
 
-  return Item(id: id, type: 0)
-
-  // Waiting on future contract deployment
-  // if let collection = cap.borrow() {
-  //   if let item = collection.borrowKittyItem(id: id) {
-  //     return Item(id: id, type: item.typeID)
-  //   } else {
-  //     return nil
-  //   }
-  // } else {
-  //   return nil
-  // }
+  if let collection = cap.borrow() {
+    if let item = collection.borrowKittyItem(id: id) {
+      return Item(id: id, type: item.typeID)
+    } else {
+      return nil
+    }
+  } else {
+    return nil
+  }
 }
 
 pub fun main(keys: [String], addresses: [Address], ids: [UInt64]): {String: Item?} {
