@@ -7,6 +7,7 @@ import ContractsCluster from "../../parts/contracts-cluster.comp"
 import FlowBalanceCluster from "../../parts/flow-balance-cluster.comp"
 import KibblesBalanceCluster from "../../parts/kibbles-balance-cluster.comp"
 import AccountItemsCluster from "../../parts/account-items-cluster.comp"
+import MarketItemsCluster from "../../parts/market-items-cluster.comp"
 
 export function Page() {
   const [user] = useCurrentUser()
@@ -19,6 +20,7 @@ export function Page() {
         <KibblesBalanceCluster address={user.addr} />
         <InitCluster address={user.addr} />
         <AccountItemsCluster address={user.addr} />
+        <MarketItemsCluster address={user.addr} />
       </Stack>
     </Base>
   )

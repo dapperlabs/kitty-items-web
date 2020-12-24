@@ -12,13 +12,26 @@ export function AccountItemCluster({address, id}) {
   return (
     <li>
       <Bar>
-        <Label strong>Id:</Label>
-        <Label good>{item.id}</Label>
-        <Label strong>Type: </Label>
-        <Label good>{item.type}</Label>
+        <Label strong bad={item.forSale}>
+          Id:
+        </Label>
+        <Label good={!item.forSale} bad={item.forSale}>
+          {item.id}
+        </Label>
+        <Label strong bad={item.forSale}>
+          Type:{" "}
+        </Label>
+        <Label good={!item.forSale} bad={item.forSale}>
+          {item.type}
+        </Label>
         <Button disabled={item.status !== IDLE} onClick={item.refresh}>
           Refetch
         </Button>
+        {item.forSale || (
+          <Button onClick={() => item.sell("10.0")}>
+            Put on market for 10.0 Kibble
+          </Button>
+        )}
         {item.status !== IDLE && <Loading label={item.status} />}
       </Bar>
     </li>
