@@ -19,11 +19,31 @@ export function useAccountItems(address) {
   const [items, setItems] = useRecoilState($state(address))
   const [status, setStatus] = useRecoilState($status(address))
 
+  async function refresh() {
+    setStatus(PROCESSING)
+    await fetchAccountItems(address).then(setItems)
+    setStatus(IDLE)
+  }
+
   return {
     ids: items,
     status,
-    async refresh() {
+    refresh,
+    async mint() {
       setStatus(PROCESSING)
+      await fetch(
+        "https://kitty-items-flow-testnet.herokuapp.com/v1/kitty-items/mint",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            recipient: address,
+            typeId: 2,
+          }),
+        }
+      )
       await fetchAccountItems(address).then(setItems)
       setStatus(IDLE)
     },

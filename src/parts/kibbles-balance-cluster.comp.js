@@ -2,7 +2,7 @@ import {Suspense} from "react"
 import {useInitialized} from "../hooks/use-initialized.hook"
 import {useKibblesBalance} from "../hooks/use-kibbles-balance.hook"
 import {Bar, Label, Button} from "../display/bar.comp"
-import {IDLE, PROCESSING} from "../global/constants"
+import {IDLE} from "../global/constants"
 import {Loading} from "../parts/loading.comp"
 import {fmtKibbles} from "../util/fmt-kibbles"
 
@@ -19,6 +19,9 @@ export function KibblesBalanceCluster({address}) {
       </Label>
       <Button disabled={kibble.status !== IDLE} onClick={kibble.refresh}>
         Refresh
+      </Button>
+      <Button disabled={kibble.status !== IDLE} onClick={kibble.mint}>
+        Mint
       </Button>
       {kibble.status !== IDLE && <Loading label={kibble.status} />}
     </Bar>
