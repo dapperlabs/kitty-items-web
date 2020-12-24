@@ -1,8 +1,6 @@
 import {atomFamily, selectorFamily, useRecoilState} from "recoil"
 import {fetchKibblesBalance} from "../flow/fetch-kibbles-balance.script"
-import {IDLE, PROCESSING, SUCCESS, ERROR, IDLE_DELAY} from "../global/constants"
-import {sleep} from "../util/sleep"
-import {useFlowBalance} from "./use-flow-balance.hook"
+import {IDLE, PROCESSING} from "../global/constants"
 
 export const valueAtom = atomFamily({
   key: "kibbles-balance::state",
@@ -18,7 +16,6 @@ export const statusAtom = atomFamily({
 })
 
 export function useKibblesBalance(address) {
-  const flow = useFlowBalance(address)
   const [balance, setBalance] = useRecoilState(valueAtom(address))
   const [status, setStatus] = useRecoilState(statusAtom(address))
 
@@ -32,5 +29,23 @@ export function useKibblesBalance(address) {
     balance,
     status,
     refresh,
+    async mint() {
+      setStatus(PROCESSING)
+      await fetch(
+        "https://kitty-items-flow-testnet.herokuapp.com/v1/kibbles/mint",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            recipient: address,
+            amount: 5.0,
+          }),
+        }
+      )
+      await fetchKibblesBalance(address).then(setBalance)
+      setStatus(IDLE)
+    },
   }
 }

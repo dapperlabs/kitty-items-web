@@ -20,6 +20,7 @@ export function AccountItemsCluster({address}) {
         <Button disabled={items.status !== IDLE} onClick={items.refresh}>
           Refresh
         </Button>
+        <Button onClick={items.mint}>Mint</Button>
         {items.status !== IDLE && <Loading label={items.status} />}
       </Bar>
       {items.ids.length > 0 && (
