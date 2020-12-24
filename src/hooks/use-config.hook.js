@@ -6,7 +6,7 @@ export function useConfig(key, fallback) {
 
   useEffect(() => {
     config().get(key, fallback).then(setValue)
-  }, [key])
+  }, [key, fallback])
 
   return value
 }
