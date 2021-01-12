@@ -9,10 +9,12 @@ import KittyItems from 0xKittyItems
 pub struct Item {
   pub let id: UInt64
   pub let type: UInt64
+  pub let owner: Address
 
-  init(id: UInt64, type: UInt64) {
+  init(id: UInt64, type: UInt64, owner: Address) {
     self.id = id
     self.type = type
+    self.owner = owner
   }
 }
 
@@ -22,7 +24,7 @@ pub fun fetch(address: Address, id: UInt64): Item? {
 
   if let collection = cap.borrow() {
     if let item = collection.borrowKittyItem(id: id) {
-      return Item(id: id, type: item.typeID)
+      return Item(id: id, type: item.typeID, owner: address)
     } else {
       return nil
     }

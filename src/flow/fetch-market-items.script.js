@@ -25,5 +25,5 @@ export function fetchMarketItems(address) {
     fcl.args([
       fcl.arg(address, t.Address)
     ])
-  ]).then(fcl.decode)
+  ]).then(fcl.decode).then(d => d.sort((a, b) => a - b))
 }

@@ -28,7 +28,10 @@ export function AccountItemCluster({address, id}) {
           Refetch
         </Button>
         {item.forSale || (
-          <Button onClick={() => item.sell("10.0")}>
+          <Button
+            disabled={item.status !== IDLE}
+            onClick={() => item.sell("10.0")}
+          >
             Put on market for 10.0 Kibble
           </Button>
         )}
