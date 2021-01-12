@@ -21,6 +21,8 @@ export function Page() {
         <InitCluster address={user.addr} />
         <AccountItemsCluster address={user.addr} />
         <MarketItemsCluster address={user.addr} />
+        <h3>Store</h3>
+        <MarketItemsCluster address="0xfcceff21d9532b58" />
       </Stack>
     </Base>
   )

@@ -3,6 +3,7 @@ import {Bar, Label, Button} from "../display/bar.comp"
 import {Loading} from "../parts/loading.comp"
 import {useMarketItems} from "../hooks/use-market-items.hook"
 import {IDLE} from "../global/constants"
+import Item from "./market-item-cluster.comp"
 
 export function MarketItemsCluster({address}) {
   const items = useMarketItems(address)
@@ -24,7 +25,7 @@ export function MarketItemsCluster({address}) {
       {items.ids.length > 0 && (
         <ul>
           {items.ids.map(id => (
-            <li key={id}>{id}</li>
+            <Item key={id} id={id} address={address} />
           ))}
         </ul>
       )}

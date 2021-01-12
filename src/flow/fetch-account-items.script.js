@@ -1,7 +1,7 @@
-import {send, decode, script, args, arg, cdc} from "@onflow/fcl"
+import * as fcl from "@onflow/fcl"
 import {Address} from "@onflow/types"
 
-const CODE = cdc`
+const CODE = fcl.cdc`
   import NonFungibleToken from 0xNonFungibleToken
   import KittyItems from 0xKittyItems
 
@@ -21,10 +21,10 @@ export function fetchAccountItems(address) {
   if (address == null) return Promise.resolve([])
 
   // prettier-ignore
-  return send([
-    script(CODE),
-    args([
-      arg(address, Address)
+  return fcl.send([
+    fcl.script(CODE),
+    fcl.args([
+      fcl.arg(address, Address)
     ]),
-  ]).then(decode)
+  ]).then(fcl.decode).then(d => d.sort((a, b) => a - b))
 }
