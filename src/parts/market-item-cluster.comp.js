@@ -17,12 +17,15 @@ export function MarketItemCluster({address, id}) {
   return (
     <li>
       <Bar>
-        <Button disabled={BUSY} onClick={list.buy}>
-          Buy
-        </Button>
-        <Button disabled={BUSY} onClick={list.cancelListing}>
-          Remove
-        </Button>
+        {item.owned ? (
+          <Button disabled={BUSY} onClick={list.cancelListing}>
+            Remove
+          </Button>
+        ) : (
+          <Button disabled={BUSY} onClick={list.buy}>
+            Buy
+          </Button>
+        )}
         <Label strong>Id:</Label>
         <Label>{item.id}</Label>
         <Label strong>Type:</Label>
