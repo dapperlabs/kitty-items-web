@@ -23,6 +23,7 @@ import {
   TabPanels,
   TabPanel,
   Spinner,
+  Button,
 } from "@chakra-ui/react"
 
 const STORE_ADDRESS = "0xba1132bc08f82fe2"
@@ -42,10 +43,20 @@ export function AccountItemsCount({address}) {
 }
 
 export function StoreItemsCount() {
-  const items = useAccountItems(STORE_ADDRESS)
+  const items = useMarketItems(STORE_ADDRESS)
   if (items.status !== IDLE) return <Spinner size="xs" ml="1" />
   const l = items?.ids?.length ?? 0
   return l > 0 ? <Tag ml="1">{l}</Tag> : null
+}
+
+export function MintButton({address}) {
+  const items = useAccountItems(address)
+
+  return (
+    <Button disabled={items.status !== IDLE} onClick={items.mint}>
+      Mint Item
+    </Button>
+  )
 }
 
 export function Page() {
@@ -79,6 +90,13 @@ export function Page() {
           <Box ml="4">
             <BalanceCluster address={address} />
           </Box>
+          {cu.addr === address && cu.addr === STORE_ADDRESS && (
+            <Box ml="4">
+              <Suspense fallback={null}>
+                <MintButton address={address} />
+              </Suspense>
+            </Box>
+          )}
         </Flex>
         <Tabs>
           <TabList>
