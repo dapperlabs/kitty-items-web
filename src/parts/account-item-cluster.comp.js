@@ -60,14 +60,17 @@ export default function WrappedAccountItemCluster(props) {
     <Suspense
       fallback={
         <Tr>
-          #{props.id}
           <Td>
-            <Spinner size="xs" />
+            <Flex>
+              <Text>#{props.id}</Text>
+              <Center ml="4">
+                <Spinner size="xs" />
+              </Center>
+            </Flex>
           </Td>
-          <Td>
-            <Spinner size="xs" />
-          </Td>
-          <Td></Td>
+          <Td />
+          <Td />
+          <Td />
         </Tr>
       }
     >
