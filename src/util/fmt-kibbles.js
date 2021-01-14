@@ -1,5 +1,9 @@
-export function fmtKibbles(balance) {
+export function fmtKibbles(balance, cur = false) {
   if (balance == null) return null
-  return String(balance) + " KIBBLES"
-  // return String(Number(balance) / 100000000) + " KIBBLES"
+  return [
+    String(balance).replace(/0+$/, "").replace(/\.$/, ""),
+    cur && "KIBBLE",
+  ]
+    .filter(Boolean)
+    .join(" ")
 }
