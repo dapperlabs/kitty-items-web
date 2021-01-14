@@ -1,49 +1,76 @@
 import {Suspense} from "react"
 import {Loading} from "../parts/loading.comp"
 import {useAccountItem} from "../hooks/use-account-item.hook"
-import {Bar, Label, Button} from "../display/bar.comp"
+// import {useMarketItem} from "../hooks/use-market-item.hook"
+import {useCurrentUser} from "../hooks/use-current-user.hook"
 import {IDLE} from "../global/constants"
+import {Tr, Td, Button, Spinner, Flex, Center, Text} from "@chakra-ui/react"
 
 export function AccountItemCluster({address, id}) {
   const item = useAccountItem(address, id)
+  // const list = useMarketItem(address, id)
+  const [cu] = useCurrentUser()
+
+  const BUSY = item.status !== IDLE
+
   if (address == null) return null
   if (id == null) return null
 
   return (
-    <li>
-      <Bar>
-        <Label strong bad={item.forSale}>
-          Id:
-        </Label>
-        <Label good={!item.forSale} bad={item.forSale}>
-          {item.id}
-        </Label>
-        <Label strong bad={item.forSale}>
-          Type:{" "}
-        </Label>
-        <Label good={!item.forSale} bad={item.forSale}>
-          {item.type}
-        </Label>
-        <Button disabled={item.status !== IDLE} onClick={item.refresh}>
-          Refetch
-        </Button>
-        {item.forSale || (
-          <Button
-            disabled={item.status !== IDLE}
-            onClick={() => item.sell("10.0")}
-          >
-            Put on market for 10.0 Kibble
-          </Button>
-        )}
-        {item.status !== IDLE && <Loading label={item.status} />}
-      </Bar>
-    </li>
+    <Tr>
+      <Td maxW="50px">
+        <Flex>
+          <Text as={item.forSale && "del"}>#{item.id}</Text>
+          {BUSY && (
+            <Center ml="4">
+              <Spinner size="xs" />
+            </Center>
+          )}
+        </Flex>
+      </Td>
+      <Td>{item.type}</Td>
+      {cu.addr === address && (
+        <>
+          {!item.forSale ? (
+            <Td isNumeric maxW="50px">
+              <Button
+                colorScheme="blue"
+                size="sm"
+                disabled={BUSY}
+                onClick={() => item.sell("10.0")}
+              >
+                List for 10 KIBBLE
+              </Button>
+            </Td>
+          ) : (
+            <Td isNumeric maxW="50px">
+              <Button size="sm" disabled={true} colorScheme="orange">
+                Unlist (TODO)
+              </Button>
+            </Td>
+          )}
+        </>
+      )}
+    </Tr>
   )
 }
 
 export default function WrappedAccountItemCluster(props) {
   return (
-    <Suspense fallback={<Loading label="Fetching Item" />}>
+    <Suspense
+      fallback={
+        <Tr>
+          #{props.id}
+          <Td>
+            <Spinner size="xs" />
+          </Td>
+          <Td>
+            <Spinner size="xs" />
+          </Td>
+          <Td></Td>
+        </Tr>
+      }
+    >
       <AccountItemCluster {...props} />
     </Suspense>
   )

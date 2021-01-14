@@ -1,35 +1,39 @@
 import {Suspense} from "react"
-import {Bar, Label, Button} from "../display/bar.comp"
-import {Loading} from "../parts/loading.comp"
 import {useMarketItems} from "../hooks/use-market-items.hook"
-import {IDLE} from "../global/constants"
+import {useCurrentUser} from "../hooks/use-current-user.hook"
 import Item from "./market-item-cluster.comp"
+import {Box, Table, Thead, Tbody, Tr, Th, Text, Spinner} from "@chakra-ui/react"
 
 export function MarketItemsCluster({address}) {
   const items = useMarketItems(address)
-
+  const [cu] = useCurrentUser()
   if (address == null) return null
 
+  if (items.ids.length <= 0)
+    return (
+      <Box borderWidth="1px" borderRadius="lg" p="4">
+        <Text>No Items Listed For Sale</Text>
+      </Box>
+    )
+
   return (
-    <div>
-      <Bar>
-        <Label good={items.ids.length > 0} bad={items.ids.length <= 0}>
-          {items.ids.length}
-        </Label>
-        <Label strong>Market Items for {address}</Label>
-        <Button disabled={items.status !== IDLE} onClick={items.refresh}>
-          Refresh
-        </Button>
-        {items.status !== IDLE && <Loading label={items.status} />}
-      </Bar>
-      {items.ids.length > 0 && (
-        <ul>
+    <Box borderWidth="1px" borderRadius="lg">
+      <Table size="sm">
+        <Thead>
+          <Tr>
+            <Th>Id</Th>
+            <Th>Type</Th>
+            <Th isNumeric>Price</Th>
+            {cu.addr === address ? <Th /> : null}
+          </Tr>
+        </Thead>
+        <Tbody>
           {items.ids.map(id => (
             <Item key={id} id={id} address={address} />
           ))}
-        </ul>
-      )}
-    </div>
+        </Tbody>
+      </Table>
+    </Box>
   )
 }
 
@@ -37,9 +41,9 @@ export default function WrappedMarketItemsCluster({address}) {
   return (
     <Suspense
       fallback={
-        <Bar>
-          <Loading label="Fetching Items" />
-        </Bar>
+        <Box borderWidth="1px" borderRadius="lg" p="4">
+          <Spinner />
+        </Box>
       }
     >
       <MarketItemsCluster address={address} />

@@ -1,7 +1,7 @@
 import {Suspense} from "react"
 import {useFlowBalance} from "../hooks/use-flow-balance.hook"
 import {Bar, Label, Button} from "../display/bar.comp"
-import {IDLE, PROCESSING} from "../global/constants"
+import {IDLE} from "../global/constants"
 import {Loading} from "../parts/loading.comp"
 import {fmtFlow} from "../util/fmt-flow"
 
